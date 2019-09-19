@@ -21,9 +21,9 @@ mongoexport --db "$PSA_DB" --collection "$PSA_COL_SIGNALEMENT" --type csv --out 
 
 mongoexport --db "$PSA_DB" --collection "$PSA_COL_ASCENSEUR" --type csv --out /tmp/ascenseurs.csv --fields "$PSA_FIELDS_SIGNALEMENT"
 
-cat /tmp/signalement.csv | sed 's/"{""$ref"":""'$PSA_COL_ASCENSEUR'"",""$id"":{""$oid"":""//g' | sed 's/""},""$db"":""'$PSA_DB'""}"//g' | tr "\n" "|" | sed -r "s/\|([a-z0-9]+),/\n\1,/g" | sed 's/|/ /g' | tr -d "\r" | sort > /tmp/signalements_clean.csv
+cat /tmp/signalements.csv | sed 's/"{""$ref"":""'$PSA_COL_ASCENSEUR'"",""$id"":{""$oid"":""//g' | sed 's/""},""$db"":""'$PSA_DB'""}"//g' | tr "\n" "|" | sed -r "s/\|([a-z0-9]+),/\n\1,/g" | sed 's/|/ /g' | tr -d "\r" | sort > /tmp/signalements_clean.csv
 
-cat /tmp/ascenseur.csv | sed 's/ObjectId(//g' | sed 's/),/,/g' | sort > /tmp/ascenseurs_clean.csv
+cat /tmp/ascenseurs.csv | sed 's/ObjectId(//g' | sed 's/),/,/g' | sort > /tmp/ascenseurs_clean.csv
 
 echo "$PSA_ENTETES_FILE" > "$PSA_TARGET_FILE"
 
