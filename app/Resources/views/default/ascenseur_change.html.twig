@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class="text-center">Changement de status de l'ascenseur</h2>
+
+    <div class="justify-content-center text-center">
+        <p>Cet ascenseur est actuellement {{ ascenseur.statut }}.</p>
+        <p>
+            {% if ascenseur.firstPhotoId %}
+                <img alt="Photo de l'ascenseur" class="img-fluid my-2" src="{{ path('photo', { id: ascenseur.firstPhotoId }) }}">
+            {% else %}
+                <em>Pas de photo disponible</em>
+            {% endif %}
+        </p>
+        <p>Voulez-vous le passer au status
+            {% if ascenseur.statut is constant('STATUT_ENPANNE', ascenseur) %}
+                <strong class="text-success">fonctionnel</strong>
+            {% else %}
+                <strong class="text-danger">en panne</strong>
+            {% endif %}
+            ?
+        </p>
+    </div>
+    <div class="justify-content-center text-center mt-5">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col">
+                <a href="{{ path('ascenseur', { id: ascenseur.id }) }}" class="btn btn-block btn-outline-secondary">Annuler</a>
+            </div>
+            <div class="col">
+                {{ form_widget(form.confirm) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

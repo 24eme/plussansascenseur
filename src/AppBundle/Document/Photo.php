@@ -10,6 +10,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations\PreUpdate;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\PrePersist;
 use Symfony\Component\HttpFoundation\File\File;
 use AppBundle\Document\Exif;
+use AppBundle\Document\Thumbnail;
 
 
 /**
@@ -74,6 +75,9 @@ class Photo
 
     /** @MongoDB\EmbedOne(targetDocument="Exif") */
     protected $exif;
+
+   /** @MongoDB\ReferenceOne(targetDocument="Thumbnail") */
+    protected $thumbnail;
 
     /**
      * Get updatedAt
@@ -290,9 +294,8 @@ class Photo
         return $file;
     }
 
-    public function convertBase64AndRemove($file){
+    public function convertBase64($file){
         $this->setBase64(base64_encode(file_get_contents($file)));
-        $this->removeFile();
     }
 
     /**
@@ -309,22 +312,16 @@ class Photo
         $file = realpath($file);
 
         $this->storeExif($file);
-
-        list($width, $height, $type, $attr) = getimagesize($file);
-        $attent_width = ($resizeWidth)? $resizeWidth : $width;
-        $attent_height = ($attent_width * $height) / $attent_width;
-        $dstImg = $this->resize_image($file, $attent_width, $attent_height);
-
         $this->extractGeolocFromFile($file);
-
-        $this->convertBase64AndRemove($file);
+        $this->convertBase64($file);
     }
 
     public function getBase64Src(){
         return 'data: '.$this->getExt().';base64,'.$this->getBase64();
     }
 
-    private function resize_image($file, $w, $h) {
+    private function resize_image($file, $w, $h)
+    {
         list($width, $height) = getimagesize($file);
         $r = $width / $height;
         if ($w/$h > $r) {
@@ -488,5 +485,15 @@ class Photo
     public function getExif()
     {
         return $this->exif;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(Thumbnail $thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
     }
 }

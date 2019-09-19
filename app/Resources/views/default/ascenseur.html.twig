@@ -3,7 +3,7 @@
 {% block body %}
 <div class="row">
 <div class="col-md-12">
-<h2>Ascenseur {{ ascenseur.constructeurNom }}  <small><span class="badge badge-{% if ascenseur.statut == "EN_PANNE" %}danger{% else %}success{% endif %}">{% if ascenseur.statut == "EN_PANNE" %}En panne{% else %}En fonction{% endif %}</span></small></h2>
+<h2>Ascenseur {{ ascenseur.constructeurNom }} <small><span class="badge badge-{% if ascenseur.statut is constant('STATUT_ENPANNE', ascenseur) %}danger{% else %}success{% endif %}">{% if ascenseur.statut is constant('STATUT_ENPANNE', ascenseur) %}En panne{% else %}En fonction{% endif %}</span></small></h2>
 </div>
 <div class="col-md-6 my-3">
 <h2><small>
@@ -40,7 +40,7 @@
         <div class="row">
         {% for idPhoto in ascenseur.photosId|slice(0, 2) %}
         <div class="col-md-6 mb-3 text-center">
-            <a href="{{ path('photo', { id: idPhoto }) }}" title="Photo">
+            <a href="{{ path('photo', { id: idPhoto, size: 'original' }) }}" title="Photo">
                 <img src="{{ path('photo', { id: idPhoto }) }}" alt="Photo de l'ascenseur" class="img-fluid" style="margin-bottom:0; max-height : 200px;"/>
             </a>
          </div>
@@ -120,15 +120,15 @@
 </div>
 
 <h3>Historique de l'ascenseur</h3>
-{% if ascenseur.statut == "EN_PANNE" %}
-<div class="alert alert-danger" role="alert">
-  Cette ascenseur est en panne de depuis le {{ ascenseur.dateStatut | date("d/m/Y") }} <a href="" class="btn btn-outline-info btn-sm float-right py-0">signaler un changement</a>
+
+<div class="clearfix alert alert-{% if ascenseur.statut is constant('STATUT_ENPANNE', ascenseur) %}danger{% else %}success{% endif %}" role="alert">
+    Cet ascenseur est en {% if ascenseur.statut is constant('STATUT_ENPANNE', ascenseur) %}panne{% else %}fonction{% endif %} depuis le {{ ascenseur.dateStatut | date("d/m/Y") }}.
+    <a href="{{ path('switch_status', {id: ascenseur.id}) }}"
+       class="btn btn-outline-info btn-sm float-right py-0">
+        Signaler un changement
+    </a>
 </div>
-{% else %}
-<div class="alert alert-success" role="alert">
-  Cette ascenseur est en fonction depuis le {{ ascenseur.dateStatut | date("d/m/Y") }} <a href="" class="btn btn-outline-info btn-sm float-right py-0">signaler un changement</a>
-</div>
-{% endif %}
+
 <table class="table table-bordered table-sm">
     <thead style="border-spacing:0;">
         <tr class="row mx-0">

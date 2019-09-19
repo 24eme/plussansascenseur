@@ -34,7 +34,8 @@ class SignalementType extends AbstractType
             ->add('codeInterphone', TextType::class, array('required' => false, 'label' => "Code / Interphone :"))
             ->add('proprietaire', ChoiceType::class, array('choices' => $this->getChoicesProprietaire(), 'choices_as_values' => true, 'required' => false, 'label' => "Vous êtes :"))
             ->add('complements', ChoiceType::class, array(
-                'choices' => Signalement::$complementsList,
+                'choices' => array_flip(Signalement::$complementsList),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,

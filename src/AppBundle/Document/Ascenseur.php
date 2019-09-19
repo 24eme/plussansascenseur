@@ -14,6 +14,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations\PrePersist;
 class Ascenseur {
 
     const STATUT_ENPANNE = "EN_PANNE";
+    const STATUT_FONCTIONNEL = "FONCTIONNEL";
 
     /**
       * @MongoDB\Id(strategy="AUTO")
